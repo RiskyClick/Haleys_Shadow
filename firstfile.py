@@ -1,1 +1,4 @@
-This is a test file for whatever.
+counter = 0
+while counter < 1000:
+    print("fart")
+    
