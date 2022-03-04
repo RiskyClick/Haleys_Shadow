@@ -9,36 +9,64 @@ import random
 SCREEN_WIDTH = 500
 SCREEN_HEIGHT = 750
 pygame.init()
-
-# Set up the drawing window
 screen = pygame.display.set_mode([SCREEN_WIDTH, SCREEN_HEIGHT])   
-
-
 class game_board():
-    def __init__(self, ):
+    def __init__(self):
         self.clear()
+        self.letters = []
         self.box_bank = self.create_bank()
         self.select_word()
-        self.the_word= ""
-        self.guesses = 5
+        self.the_word = "TOKEN"
+        self.guesses = 0
         self.draw_boxes()
         self.tile_pos = 0
-        self.letters = []
+        self.check
+        self.in_word_list
+        self.same_letters
+
+    def in_word_list(self, guess):
+        return True
+    
+    def same_letters(self, guess):
+        for key, val in enumerate(self.the_word):
+            for k , v in enumerate(guess):
+                if key == k and val == v:
+                    self.letters[key][3] = True
+        for key, el in enumerate(guess):
+            if el in self.the_word:
+                self.letters[key + (5 * self.guesses)][2] = True
+
+    def check(self):
+        guess = ""
+        for el in self.letters:
+            guess += el[1]
+        if guess == self.the_word:
+            print("YOU WIN")
+        else:
+            if self.in_word_list(guess):
+                self.same_letters(guess)
+
+
 
     def create_letter(self, pressed_key):
-        letter = pygame.font.SysFont("comicsansms", 24)
-        letter_font = letter.render(pressed_key, True, (128, 128, 128))
-        self.letters.append([self.tile_pos, letter_font])
+        letter = pygame.font.SysFont("comicsansms", 64)
+        letter_font = letter.render(pressed_key, True, (255, 255, 255))
+        self.letters.append([letter_font, pressed_key, False, False])
 
     def draw_boxes(self):
-        for key, i in enumerate(self.box_bank):
-            pygame.draw.rect(screen, (0,0,0), (i[0], i[1], i[2], i[3]))
+        for key, box in enumerate(self.box_bank):
+            pygame.draw.rect(screen, (0,0,0), (box[0], box[1], box[2], box[3]))
             for k, v in enumerate(self.letters):
                 if key == k:
-                    screen.blit(v[1], (i[0], i[1]))
- 
+                    if self.letters[k][2] and self.letters[k][3]:
+                        pygame.draw.rect(screen, (0,128,0), (box[0], box[1], box[2], box[3]))
+                    elif self.letters[k][2] and not self.letters[k][3]:
+                        pygame.draw.rect(screen, (128,128,0), (box[0], box[1], box[2], box[3]))
+                    screen.blit(v[0], (box[0] + 5, box[1]))
         pygame.display.update()
 
+    def draw_letters(self):
+        pass
 
     def clear(self):
         screen.fill((128, 128, 128))
@@ -97,7 +125,6 @@ class whatever:
     clicked = (0, 0)
     welcome_screen = welcome(clicked)
     game_board = game_board()
-    pressed_key = ""
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -109,58 +136,66 @@ class whatever:
             if welcome_screen.play:
                 if event.type == pygame.KEYDOWN: 
                     if event.key == pygame.K_a:
-                        pressed_key = 'A' 
+                        game_board.create_letter('A') 
                     if event.key == pygame.K_b:
-                        pressed_key = 'B'
+                        game_board.create_letter('B')
                     if event.key == pygame.K_c:
-                        pressed_key = 'C'
+                        game_board.create_letter('C')
                     if event.key == pygame.K_d:
-                        pressed_key = 'D'
+                        game_board.create_letter('D')
                     if event.key == pygame.K_e:
-                        pressed_key = 'E'
+                        game_board.create_letter('E')
                     if event.key == pygame.K_f:
-                        pressed_key = 'F'
+                        game_board.create_letter('F')
                     if event.key == pygame.K_g:
-                        pressed_key = 'G'
+                        game_board.create_letter('G')
                     if event.key == pygame.K_h:
-                        pressed_key = 'H'
+                        game_board.create_letter('H')
                     if event.key == pygame.K_i:
-                        pressed_key = 'I'
+                        game_board.create_letter('I')
                     if event.key == pygame.K_j:
-                        pressed_key = 'J'
+                        game_board.create_letter('J')
                     if event.key == pygame.K_k:
-                        pressed_key = 'K'
+                        game_board.create_letter('K')
                     if event.key == pygame.K_l:
-                        pressed_key = 'L'
+                        game_board.create_letter('L')
                     if event.key == pygame.K_m:
-                        pressed_key = 'M'
+                        game_board.create_letter('M')
                     if event.key == pygame.K_n:
-                        pressed_key = 'N'                        
+                        game_board.create_letter('N')                        
                     if event.key == pygame.K_o:
-                        pressed_key = 'O'
+                        game_board.create_letter('O')
                     if event.key == pygame.K_p:
-                        pressed_key = 'P'
+                        game_board.create_letter('P')
                     if event.key == pygame.K_q:
-                        pressed_key = 'Q'
+                        game_board.create_letter('Q')
                     if event.key == pygame.K_r:
-                        pressed_key = 'R'
+                        game_board.create_letter('R')
                     if event.key == pygame.K_s:
-                        pressed_key = 'S'
+                        game_board.create_letter('S')
                     if event.key == pygame.K_t:
-                        pressed_key = 'T'
+                        game_board.create_letter('T')
                     if event.key == pygame.K_u:
-                        pressed_key = 'U'
+                        game_board.create_letter('U')
                     if event.key == pygame.K_v:
-                        pressed_key = 'V'
+                        game_board.create_letter('V')
                     if event.key == pygame.K_w:
-                        pressed_key = 'W'
+                        game_board.create_letter('W')
                     if event.key == pygame.K_x:
-                        pressed_key = 'X'
+                        game_board.create_letter('X')
                     if event.key == pygame.K_y:
-                        pressed_key = 'Y'
+                        game_board.create_letter('Y')
                     if event.key == pygame.K_z:
-                        pressed_key = 'Z'
-                    game_board.create_letter(pressed_key)
+                        game_board.create_letter('Z')
+                    if event.key == pygame.K_BACKSPACE:
+                        if len(game_board.letters) > 0:
+                            game_board.letters.pop()
+                    if event.key == pygame.K_RETURN:
+                        if len(game_board.letters) % 5 == 0:
+                            game_board.check()
+                        else:
+                            print("NOT CMPLEATE")
+
 
         # Fill the background with white
         screen.fill((255, 255, 255))
