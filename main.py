@@ -23,6 +23,7 @@ class game_board():
         self.check
         self.in_word_list
         self.same_letters
+        self.letter_bank =[]
 
     def in_word_list(self, guess):
         return True
@@ -31,20 +32,24 @@ class game_board():
         for key, val in enumerate(self.the_word):
             for k , v in enumerate(guess):
                 if key == k and val == v:
-                    self.letters[key][3] = True
+                    self.letter_bank[self.guesses][key][3] = True
         for key, el in enumerate(guess):
             if el in self.the_word:
-                self.letters[key + (5 * self.guesses)][2] = True
+                self.letter_bank[self.guesses][key + (5 * self.guesses)][2] = True
 
     def check(self):
         guess = ""
-        for el in self.letters:
+        self.letter_bank.append(self.letters)
+        self.letters = []
+        for el in self.letter_bank[self.guesses]:
             guess += el[1]
         if guess == self.the_word:
             print("YOU WIN")
+            #TODO: create a start new game menu
         else:
             if self.in_word_list(guess):
                 self.same_letters(guess)
+        self.guesses += 1
 
 
 
