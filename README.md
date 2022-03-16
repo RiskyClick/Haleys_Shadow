@@ -10,9 +10,9 @@ The object is to guess the random 5 letter word in the least about of guesses.
 
 # Example
 
-The random word is "TOKEN" (but you don't know that)
-You guess the word "FARTS"
-Your guess will highlight the letter "T" in yellow because that letter is in the target word but not in the correct location.
-Your next guess is "TOOTS"
-Your new guess will highlight both the first "T" and "O" in green and the second "O" and "T" will turn yellow
+The random word is "TOKEN" (but you don't know that)\
+You guess the word "FARTS"\
+Your guess will highlight the letter "T" in yellow because that letter is in the target word but not in the correct location.\
+Your next guess is "TOOTS"\
+Your new guess will highlight both the first "T" and "O" in green and the second "O" and "T" will turn yellow\
 ect.
