@@ -1,5 +1,5 @@
 # Haleys Wordle
-You know the silly word game that (The New York Times)[https://en.as.com/en/2022/02/07/latest_news/1644194032_400672.html#:~:text=Last%20month%20is%20was%20confirmed,of%20more%20than%20%241%20million.] bought for over a million dollars.
+You know the silly word game that [The New York Times](https://en.as.com/en/2022/02/07/latest_news/1644194032_400672.html#:~:text=Last%20month%20is%20was%20confirmed,of%20more%20than%20%241%20million.) bought for over a million dollars.
 
 # Rules Of the Game
 You get 5 chances to guess a random 5 letter word.
