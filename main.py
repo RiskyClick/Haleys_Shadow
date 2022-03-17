@@ -1,31 +1,81 @@
-# Simple pygame program
-
-# Import and initialize the pygame library
-from re import A
-from telnetlib import PRAGMA_HEARTBEAT
 import pygame
 import json
 import random
+
+
 SCREEN_WIDTH = 500
 SCREEN_HEIGHT = 750
 pygame.init()
 screen = pygame.display.set_mode([SCREEN_WIDTH, SCREEN_HEIGHT])   
+
+
+fart1 = pygame.mixer.Sound("sounds/rude-raspberry.wav")
+fart2 = pygame.mixer.Sound("sounds/balloon_on_the_loose.wav")
+fart3 = pygame.mixer.Sound("sounds/balloon-fart.wav")
+fart4 = pygame.mixer.Sound("sounds/fartysnap.wav")
+fart5 = pygame.mixer.Sound("sounds/R2D2-fart.wav")
+fart6 = pygame.mixer.Sound("sounds/R2D2-fart2.wav")
+divawav = pygame.mixer.Sound("sounds/diva-bwaaaow-chorus.wav")
+diva = True
+
+class win_game():
+    def __init__(self):
+        self.game_over_banner
+    
+    def game_over_banner(self, word):
+        win_font = pygame.font.SysFont("comicsansms", 35)
+        win_banner = win_font.render("CONGRADULATIONS!", True, (0, 128, 0))
+        screen.blit(win_banner, (SCREEN_WIDTH / 2 - win_banner.get_width() / 2, win_banner.get_height() / 2 + 200))
+        font = pygame.font.SysFont("comicsansms", 35)
+        banner = font.render("The Secret Word Was!", True, (0, 128, 0))
+        screen.blit(banner, (SCREEN_WIDTH / 2 - banner.get_width() / 2, banner.get_height() / 2 + 250))
+        word_font = pygame.font.SysFont("comicsansms", 35)
+        word_banner = word_font.render(word, True, (0, 128, 0))
+        screen.blit(word_banner, (SCREEN_WIDTH / 2 - word_banner.get_width() / 2, word_banner.get_height() / 2 + 300))
+        
 class game_board():
     def __init__(self):
+        self.win = False
         self.clear()
         self.letters = []
         self.box_bank = self.create_bank()
         self.select_word()
         self.the_word, self.the_list = self.select_word()
         self.guesses = 0
+        self.nots = False
+        self.not_list = False
         self.draw_boxes()
         self.tile_pos = 0
         self.check
-        self.in_word_list
+        self.not_in_word_list
         self.same_letters
+        self.not_compleate
+        self.play_fart
 
-    def in_word_list(self, guess):
-        return True
+    def play_fart(self):
+        num = random.randint(1, 6)
+        if num == 1:
+            pygame.mixer.Sound.play(fart1)
+        elif num == 2:
+            pygame.mixer.Sound.play(fart2)
+        elif num == 3:
+            pygame.mixer.Sound.play(fart3)
+        elif num == 4:
+            pygame.mixer.Sound.play(fart4)
+        elif num == 5:
+            pygame.mixer.Sound.play(fart5)
+        else:
+            pygame.mixer.Sound.play(fart6)
+        
+    def not_compleate(self):
+        not_font = pygame.font.SysFont("comicsansms", 35)
+        not_banner = not_font.render("Thats not 5 lettars idot!", True, (0, 128, 0))
+        screen.blit(not_banner, (SCREEN_WIDTH / 2 - not_banner.get_width() / 2, not_banner.get_height() / 2 + 600))
+
+    def not_in_word_list(self):
+        not_font = pygame.font.SysFont("comicsansms", 35)
+        not_banner = not_font.render("NOT A WORD STOOPID!", True, (0, 128, 0))
+        screen.blit(not_banner, (SCREEN_WIDTH / 2 - not_banner.get_width() / 2, not_banner.get_height() / 2 + 600))
     
     def same_letters(self, guess):
         for key, val in enumerate(self.the_word):
@@ -38,21 +88,22 @@ class game_board():
 
     def check(self):
         guess = ""
+        self.not_list = False
         for el in range(len(self.letters) - 5, len(self.letters)):
             guess += self.letters[el][1]
         if guess in self.the_list:
             if guess == self.the_word:
-                print("YOU WIN")
-                #TODO: create a start new game menu
+                self.win = True
+                pygame.mixer.music.load('097_super-slappy-bass.wav')
+                pygame.mixer.music.play(-1)
             else:
-                if self.in_word_list(guess):
-                    self.same_letters(guess)
+                self.same_letters(guess)
             self.guesses += 1
         else:
-            self.not_in_list(guess)
             self.letters = self.letters[:-5]
-
-
+            self.not_list = True
+            print(random.randint(1, 100) % 2)
+            self.play_fart()
 
     def create_letter(self, pressed_key):
         letter = pygame.font.SysFont("comicsansms", 64)
@@ -61,18 +112,19 @@ class game_board():
 
     def draw_boxes(self):
         for key, box in enumerate(self.box_bank):
-            pygame.draw.rect(screen, (0,0,0), (box[0], box[1], box[2], box[3]))
+            pygame.draw.rect(screen, (0,0,0), (box[0], box[1], box[2], box[3]), 5)
             for k, v in enumerate(self.letters):
                 if key == k:
                     if self.letters[k][2] and self.letters[k][3]:
-                        pygame.draw.rect(screen, (0,128,0), (box[0], box[1], box[2], box[3]))
+                        pygame.draw.rect(screen, (0,255,0), (box[0], box[1], box[2], box[3]), 5)
                     elif self.letters[k][2] and not self.letters[k][3]:
-                        pygame.draw.rect(screen, (128,128,0), (box[0], box[1], box[2], box[3]))
+                        pygame.draw.rect(screen, (255,255,0), (box[0], box[1], box[2], box[3]), 5)
                     screen.blit(v[0], (box[0] + 5, box[1]))
+        if self.nots:
+            self.not_compleate()
+        if self.not_list and self.nots == False:
+            self.not_in_word_list()
         pygame.display.update()
-
-    def draw_letters(self):
-        pass
 
     def clear(self):
         screen.fill((128, 128, 128))
@@ -89,15 +141,9 @@ class game_board():
             wordList = json.loads(textFile.read())
             secretWord = random.choice(wordList[0])
             wordList = set(wordList[1])
+            print(secretWord)
             return secretWord, wordList
-            
 
-    def not_in_list(self, guess):
-        #TODO MAKE A BANNER THAT SAYS NOT IN THE LIST 
-        pass
-
-    def banner(self):
-        pass
 
 class end_game():
     def __init__(self):
@@ -109,7 +155,10 @@ class end_game():
     def restart(self, game_board):
         game_board.guesses = 0
         game_board.letters = []
+        game_board.win = False
+        diva = True
         game_board.the_word, game_board.the_list = game_board.select_word()
+        pygame.mixer.music.pause()
     
     def game_over_banner(self, word):
         loser_font = pygame.font.SysFont("comicsansms", 50)
@@ -121,16 +170,15 @@ class end_game():
         word_font = pygame.font.SysFont("comicsansms", 50)
         word_banner = word_font.render(word, True, (0, 128, 128))
         screen.blit(word_banner, (SCREEN_WIDTH / 2 - word_banner.get_width() / 2, word_banner.get_height() / 2 + 275))
-
+        
     def clicked_retry(self, clicked):
-        pygame.draw.rect(screen, (0,0,0),(SCREEN_WIDTH / 2 - 125, SCREEN_HEIGHT / 2 + 50, 250, 50))
+        pygame.draw.rect(screen, (0,0,0),(SCREEN_WIDTH / 2 - 125, SCREEN_HEIGHT / 2 + 50, 250, 50), 5)
         retry_text = pygame.font.SysFont("comicsansms", 40)
-        retry_font = retry_text.render("Play Again?", True, (128, 128, 128))
+        retry_font = retry_text.render("Play Again?", True, (0, 0, 0))
         screen.blit(retry_font, (SCREEN_WIDTH / 2 - 100, SCREEN_HEIGHT / 2 + 40))
-
         mouse = pygame.mouse.get_pos()
         if 375 > mouse[0] > 125 and 475 > mouse[1] > 425:
-            pygame.draw.rect(screen, (128,0,0),(SCREEN_WIDTH / 2 - 125, SCREEN_HEIGHT / 2 + 50, 250, 50))
+            pygame.draw.rect(screen, (128,0,0),(SCREEN_WIDTH / 2 - 125, SCREEN_HEIGHT / 2 + 50, 250, 50), 5)
             retry_text = pygame.font.SysFont("comicsansms", 40)
             retry_font = retry_text.render("Play Again!", True, (0, 0, 0))
             screen.blit(retry_font, (SCREEN_WIDTH / 2 - 100, SCREEN_HEIGHT / 2 + 40))
@@ -141,6 +189,7 @@ class end_game():
     def clicked_quit(self):
         pass
 
+
 class welcome():
     def __init__(self, clicked):
         self.clicked = clicked
@@ -149,14 +198,19 @@ class welcome():
         self.clicked_play(clicked)
         self.play = False
         
-
     def draw_banner(self):
         welcome_font = pygame.font.SysFont("comicsansms", 50)
-        welcome_banner = welcome_font.render("Welcome", True, (0, 128, 0))
-        screen.blit(welcome_banner, (SCREEN_WIDTH / 2 - welcome_banner.get_width() / 2, welcome_banner.get_height() / 2))
+        welcome_banner = welcome_font.render("WORDLE", True, (0, 128, 0))
+        screen.blit(welcome_banner, (SCREEN_WIDTH / 2 - welcome_banner.get_width() / 2, welcome_banner.get_height() / 2 + 50))
+        welcome_font = pygame.font.SysFont("comicsansms", 50)
+        welcome_banner = welcome_font.render("BUT WAAYYYY", True, (0, 128, 0))
+        screen.blit(welcome_banner, (SCREEN_WIDTH / 2 - welcome_banner.get_width() / 2, welcome_banner.get_height() / 2 + 100))
+        welcome_font = pygame.font.SysFont("comicsansms", 50)
+        welcome_banner = welcome_font.render("WORSE", True, (0, 128, 0))
+        screen.blit(welcome_banner, (SCREEN_WIDTH / 2 - welcome_banner.get_width() / 2, welcome_banner.get_height() / 2 + 150))
     
     def play_button(self):
-        pygame.draw.rect(screen, (0,0,0),(SCREEN_WIDTH / 2 - 50, SCREEN_HEIGHT / 2 - 12, 100, 25))
+        pygame.draw.rect(screen, (0,0,0),(SCREEN_WIDTH / 2 - 50, SCREEN_HEIGHT / 2 - 12, 100, 25), 5)
         play_text = pygame.font.SysFont("comicsansms", 24)
         play_button_font = play_text.render("PLAY", True, (128, 128, 128))
         screen.blit(play_button_font, (SCREEN_WIDTH / 2 - 30, SCREEN_HEIGHT / 2 - 17))
@@ -164,7 +218,7 @@ class welcome():
     def clicked_play(self, clicked):
         mouse = pygame.mouse.get_pos()
         if 300 > mouse[0] > 200 and 390 > mouse[1] > 360:
-            pygame.draw.rect(screen, (128,0,0),(SCREEN_WIDTH / 2 - 50, SCREEN_HEIGHT / 2 - 12, 100, 25))
+            pygame.draw.rect(screen, (128,0,0),(SCREEN_WIDTH / 2 - 50, SCREEN_HEIGHT / 2 - 12, 100, 25), 5)
             play_text = pygame.font.SysFont("comicsansms", 24)
             play_button_font = play_text.render("PLAY", True, (0, 0, 0))
             screen.blit(play_button_font, (SCREEN_WIDTH / 2 - 30, SCREEN_HEIGHT / 2 - 17))
@@ -178,14 +232,14 @@ class whatever:
     welcome_screen = welcome(clicked)
     game_board = game_board()
     game_over = end_game()
+    win = win_game()
+    
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
-
             elif event.type == pygame.MOUSEBUTTONUP:
                 clicked = pygame.mouse.get_pos()
-
             if welcome_screen.play:
                 if event.type == pygame.KEYDOWN: 
                     if event.key == pygame.K_a:
@@ -245,34 +299,38 @@ class whatever:
                             game_board.letters.pop()
                     if event.key == pygame.K_RETURN:
                         if len(game_board.letters) % 5 == 0:
+                            game_board.nots = False
+                            game_board.not_list = False
                             game_board.check()
                         else:
-                            print("NOT CMPLEATE")
-                            #TODO CREATE NOT COMPLEATE BANNER
-
+                            game_board.play_fart()
+                            game_board.nots = True
 
         screen.fill((255, 255, 255))
         font = pygame.font.SysFont("comicsansms", 72)
         if welcome_screen.play:
             if game_board.guesses >= 5:
+                if diva:
+                    diva = False
+                    pygame.mixer.Sound.play(divawav)
                 game_board.clear()
                 end_game.game_over_banner(None, game_board.the_word)
                 if end_game.clicked_retry(None, clicked):
                     end_game.restart(None, game_board)
                 pygame.display.update()
+            elif game_board.win:
+                game_board.clear()
+                win_game.game_over_banner(None, game_board.the_word)
+                if end_game.clicked_retry(None, clicked):
+                    end_game.restart(None, game_board)
             else:
                 game_board.clear()
                 game_board.draw_boxes()
                 pygame.display.update()
-
         else:
             welcome_screen.draw_banner()
             welcome_screen.play_button()
             welcome_screen.clicked_play(clicked)
             pygame.display.update()
-        
-        # Flip the display
         pygame.display.flip()
-
-    # Done! Time to quit.
     pygame.quit()
