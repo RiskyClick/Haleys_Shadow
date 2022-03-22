@@ -2,20 +2,19 @@ import pygame
 import json
 import random
 
-
 SCREEN_WIDTH = 500
 SCREEN_HEIGHT = 750
 pygame.init()
 screen = pygame.display.set_mode([SCREEN_WIDTH, SCREEN_HEIGHT])   
 
 
-fart1 = pygame.mixer.Sound("sounds/rude-raspberry.wav")
-fart2 = pygame.mixer.Sound("sounds/balloon_on_the_loose.wav")
-fart3 = pygame.mixer.Sound("sounds/balloon-fart.wav")
-fart4 = pygame.mixer.Sound("sounds/fartysnap.wav")
-fart5 = pygame.mixer.Sound("sounds/R2D2-fart.wav")
-fart6 = pygame.mixer.Sound("sounds/R2D2-fart2.wav")
-divawav = pygame.mixer.Sound("sounds/diva-bwaaaow-chorus.wav")
+fart1 = pygame.mixer.Sound("res/sounds/rude-raspberry.wav")
+fart2 = pygame.mixer.Sound("res/sounds/balloon_on_the_loose.wav")
+fart3 = pygame.mixer.Sound("res/sounds/balloon-fart.wav")
+fart4 = pygame.mixer.Sound("res/sounds/fartysnap.wav")
+fart5 = pygame.mixer.Sound("res/sounds/R2D2-fart.wav")
+fart6 = pygame.mixer.Sound("res/sounds/R2D2-fart2.wav")
+divawav = pygame.mixer.Sound("res/sounds/diva-bwaaaow-chorus.wav")
 diva = True
 
 class win_game():
@@ -94,7 +93,7 @@ class game_board():
         if guess in self.the_list:
             if guess == self.the_word:
                 self.win = True
-                pygame.mixer.music.load('097_super-slappy-bass.wav')
+                pygame.mixer.music.load('res/sounds/097_super-slappy-bass.wav')
                 pygame.mixer.music.play(-1)
             else:
                 self.same_letters(guess)
@@ -102,7 +101,6 @@ class game_board():
         else:
             self.letters = self.letters[:-5]
             self.not_list = True
-            print(random.randint(1, 100) % 2)
             self.play_fart()
 
     def create_letter(self, pressed_key):
@@ -137,11 +135,10 @@ class game_board():
         return bank
 
     def select_word(self):
-        with open('word_list.json', 'r') as textFile:
+        with open('res/word_list.json', 'r') as textFile:
             wordList = json.loads(textFile.read())
             secretWord = random.choice(wordList[0])
             wordList = set(wordList[1])
-            print(secretWord)
             return secretWord, wordList
 
 
@@ -212,7 +209,7 @@ class welcome():
     def play_button(self):
         pygame.draw.rect(screen, (0,0,0),(SCREEN_WIDTH / 2 - 50, SCREEN_HEIGHT / 2 - 12, 100, 25), 5)
         play_text = pygame.font.SysFont("comicsansms", 24)
-        play_button_font = play_text.render("PLAY", True, (128, 128, 128))
+        play_button_font = play_text.render("PLAY", True, (0, 0, 0))
         screen.blit(play_button_font, (SCREEN_WIDTH / 2 - 30, SCREEN_HEIGHT / 2 - 17))
     
     def clicked_play(self, clicked):
@@ -306,7 +303,7 @@ class whatever:
                             game_board.play_fart()
                             game_board.nots = True
 
-        screen.fill((255, 255, 255))
+        screen.fill((128, 128, 128))
         font = pygame.font.SysFont("comicsansms", 72)
         if welcome_screen.play:
             if game_board.guesses >= 5:
